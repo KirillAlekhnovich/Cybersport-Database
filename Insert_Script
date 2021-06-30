@@ -1,0 +1,452 @@
+-- delete all records from the tables
+
+CREATE or replace FUNCTION clean_tables() RETURNS void AS $$
+declare
+  l_stmt text;
+begin
+  select 'truncate ' || string_agg(format('%I.%I', schemaname, tablename) , ',')
+    into l_stmt
+  from pg_tables
+  where schemaname in ('public');
+
+  execute l_stmt || ' cascade';
+end;
+$$ LANGUAGE plpgsql;
+select clean_tables();
+
+-- sequence reset
+
+CREATE or replace FUNCTION restart_sequences() RETURNS void AS $$
+DECLARE
+i TEXT;
+BEGIN
+ FOR i IN (SELECT column_default FROM information_schema.columns WHERE column_default SIMILAR TO 'nextval%')
+  LOOP
+         EXECUTE 'ALTER SEQUENCE'||' ' || substring(substring(i from '''[a-z_]*')from '[a-z_]+') || ' '||' RESTART 1;';
+  END LOOP;
+END $$ LANGUAGE plpgsql;
+select restart_sequences();
+-- end of reset
+
+-- end of deletion
+
+-- adding countries
+insert into country (id_country, name) values (1, 'Germany');
+insert into country (id_country, name) values (2, 'Russia');
+
+-- adding cities
+insert into city (id_city, name, id_country) values (1, 'Berlin', 1);
+insert into city (id_city, name, id_country) values (2, 'Moscow', 2);
+
+-- adding studios
+insert into studio (id_studio, name, capacity, id_city) values (1, 'LEC Studio', 174, 1);
+insert into studio (id_studio, name, capacity, id_city) values (2, 'LCL Studio', 50, 2);
+
+
+-- adding leagues
+insert into league (id_league, name, prize_pool, id_studio) values (1, 'LEC', 240000, 1);
+insert into league (id_league, name, prize_pool, id_studio) values (2, 'LCL', 60000, 2);
+
+-- adding teams
+insert into team (id_team, name, id_league) values (1, 'G2 Esports', 1);
+insert into team (id_team, name, id_league) values (2, 'Rogue', 1);
+insert into team (id_team, name, id_league) values (3, 'MAD Lions', 1);
+insert into team (id_team, name, id_league) values (4, 'Schalke 04', 1);
+insert into team (id_team, name, id_league) values (5, 'Fnatic', 1);
+insert into team (id_team, name, id_league) values (6, 'SK Gaming', 1);
+insert into team (id_team, name, id_league) values (7, 'Misfits Gaming', 1);
+insert into team (id_team, name, id_league) values (8, 'Excel', 1);
+insert into team (id_team, name, id_league) values (9, 'Astralis', 1);
+insert into team (id_team, name, id_league) values (10, 'Team Vitality', 1);
+insert into team (id_team, name, id_league) values (11, 'One Breath Gaming', 2);
+insert into team (id_team, name, id_league) values (12, 'Gambit Esports', 2);
+insert into team (id_team, name, id_league) values (13, 'CrowCrowd', 2);
+insert into team (id_team, name, id_league) values (14, 'Unicorns Of Love', 2);
+insert into team (id_team, name, id_league) values (15, 'Dragon Army', 2);
+insert into team (id_team, name, id_league) values (16, 'ROX', 2);
+insert into team (id_team, name, id_league) values (17, 'Vega Squadron', 2);
+insert into team (id_team, name, id_league) values (18, 'CTRL PLAY', 2);
+
+-- adding players
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (1, 'Wunder', 22, 'Denmark', 'Martin', 'Hansen', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (2, 'Jankos', 25, 'Poland', 'Marcin', 'Jankowski', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (3, 'Caps', 21, 'Denmark', 'Rasmus', 'Winther', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (4, 'Rekkles', 24, 'Sweden', 'Martin', 'Larsson', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (5, 'Mikyx', 22, 'Slovenia', 'Mihael', 'Mehle', 'Support');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (6, 'P1noy', 22, 'Denmark', 'Kristoffer', 'Pedersen', 'Adc');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (7, 'Odoamne', 26, 'Romania', 'Andrei', 'Pascu', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (8, 'Inspired', 19, 'Poland', 'Kacper', 'Słoma', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (9, 'Larssen', 21, 'Sweden', 'Emil', 'Larsson', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (10, 'Hans sama', 21, 'France', 'Steven', 'Liv', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (11, 'Trymbi', 20, 'Spain', 'Adrian', 'Trybus', 'Support');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (12, 'Blueknight', null, 'Germany', 'Nico', 'Jannet', 'Mid');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (13, 'Armut', 22, 'Turkey', 'İrfan', 'Tükek', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (14, 'Elyoya', 21, 'Spain', 'Javier', 'Batalla', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (15, 'Humanoid', 21, 'Czech Republic', 'Marek', 'Brázda', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (16, 'Carzzy', 19, 'Czech Republic', 'Matyáš', 'Orság', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (17, 'Kaiser', 22, 'Germany', 'Norman', 'Kaiser', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (18, 'Broken Blade', 21, 'Germany', 'Sergen', 'Çelik', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (19, 'Gilius', 24, 'Germany', 'Erberk', 'Demir', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (20, 'Nuclearint', null, 'France', 'Ilias', 'Bizriken', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (21, 'Neon', 22, 'Slovakia', 'Matúš', 'Jakubčík', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (22, 'LIMIT', 23, 'Croatia', 'Dino', 'Tot', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (23, 'Bwipo', 22, 'Belgium', 'Gabriël', 'Rau', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (24, 'Selfmade', 21, 'Poland', 'Oskar', 'Boderek', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (25, 'Nisqy', 22, 'Belgium', 'Yasin', 'Dinçer', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (26, 'Upset', 21, 'Germany', 'Elias', 'Lipp', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (27, 'Hylissang', 26, 'Bulgaria', 'Zdravets', 'Galabov', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (28, 'Jenax', 22, 'Germany', 'Janik', 'Bartels', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (29, 'TynX', 21, 'Denmark', 'Kristian ', 'Hansen', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (30, 'Blue', null, 'Belgium', 'Ersin', 'Gören', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (31, 'Jezu', 20, 'France', 'Jean', 'Massol', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (32, 'Treatz', 25, 'Sweden', 'Erik ', 'Wessén', 'Support');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (33, 'Canee', null, 'Germany', 'Marc', 'Behrend', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (34, 'Bertho', null, 'Germany', 'Thomas', 'Huber', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (35, 'Agresivoo', 21, 'Poland', 'Tobiasz', 'Ciba', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (36, 'Razork', 20, 'Spain', 'Iván', 'Díaz', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (37, 'Vetheo', 18, 'France', 'Vincent', 'Berrié', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (38, 'Kobbe', 24, 'Denmark', 'Kasper', 'Kobberup', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (39, 'denyk', 26, 'Czech Republic', 'Petr', 'Haramach', 'Support');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (40, 'HiRit', null, 'South Korea', 'Shin', 'Tae-min', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (41, 'Vander', 27, 'Poland', 'Oskar', 'Bogdan', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (42, 'Kryze', 21, 'Sweden', 'Felix', 'Hellström', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (43, 'Dan', null, 'United Kingdom', 'Daniel', 'Hockley', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (44, 'Czekolad', 21, 'Poland', 'Paweł', 'Szczepanik', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (45, 'Patrik', 21, 'Czech Republic', 'Patrik', 'Jírů', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (46, 'Tore ', 21, 'Norway', 'Tore ', 'Eilertsen', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (47, 'WhiteKnight', 25, 'Finland', 'Matti', 'Sormunen', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (48, 'Zanzarah', 24, 'Russia', 'Nikolay', 'Akatov', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (49, 'MagiFelix', 21, 'Sweden', 'Carl', 'Boström', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (50, 'Jeskla', 20, 'Sweden', 'Jesper', 'Strömberg', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (51, 'promisq', 27, 'Sweden', 'Hampus', 'Abrahamsson', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (52, 'Szygenda', 20, 'Denmark', 'Mathias', 'Jensen', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (53, 'Skeanz', 20, 'France', 'Duncan', 'Marquet', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (54, 'Milica', null, 'Serbia', 'Aljoša', 'Kovandžić', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (55, 'Crownshot', 23, 'Slovenia', 'Juš', 'Marušič', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (56, 'Labrov', 19, 'Greece', 'Labros', 'Papoutsakis', 'Support');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (57, 'Comp', 19, 'Greece', 'Markos', 'Stamkopoulos', 'Adc');
+
+
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (58, 'Smurf', 26, 'Russia', 'Dmitri', 'Ivanov', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (59, 'Kreox', null, 'Russia', 'Ilya', 'Grom', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (60, 'XoNix', null, 'Ukraine', 'Khaled', 'Noman', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (61, 'Mirbs', null, 'Sweden', 'Alex', 'Holmin', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (62, 'Adept', null, 'Sweden', 'Andreas', 'Blikfeldt', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (63, 'Dreampullka', 21, 'Russia', 'Mark', 'Leksin', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (64, 'Four', 23, 'Bulgaria', 'Stanimir', 'Penchev', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (65, 'Phlaty', 23, 'Russia', 'Alexey', 'Lemeshchuk', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (66, 'Shiganari', 22, 'Latvia', 'Artjoms', 'Pervušins', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (67, 'Lekcyc', 24, 'Russia', 'Alexander', 'Lexikov', 'Support');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (68, 'PvPStejos', 24, 'Russia', 'Alexander', 'Glazkov', 'Jungle');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (69, 'NoNHoly', 25, 'Russia', 'Alexandr', 'Ovchinikov', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (70, 'MightyDragon', 22, 'Ukraine', 'Yaroslav', 'Svistun', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (71, 'Griffon', null, 'Russia', 'Nikita', 'Gudkov', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (72, 'Kinzu', 24, 'Ukraine', 'Vladyslav', 'Belokon', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (73, 'Jestkui Max', 23, 'Russia', 'Maksim', 'Filipenko', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (74, 'BOSS', null, 'Russia', 'Vladislav', 'Fomin', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (75, 'AHaHaCiK', 22, 'Russia', 'Kirill', 'Skvortsov', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (76, 'Nomanz', 22, 'Russia', 'Lev', 'Yakshin', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (77, 'Lodik', null, 'Russia', 'Stanislav', 'Kornelyuk', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (78, 'SaNTaS', 24, 'Russia', 'Aleksandr', 'Lifashin', 'Support');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (79, 'Frappii', 19, 'France', 'Antonio', 'Botezatu', 'Adc');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (80, 'Maynter', null, 'Ukraine', 'Vladimir', 'Sorokin', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (81, 'ItsCortez', null, 'Ukraine', 'Ilya', 'Pigulev', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (82, 'Laynel', null, 'Israel', 'Laynel', 'Feldshtein', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (83, 'Argonavt', null, 'Ukraine', 'Andrey', 'Yakovlev', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (84, 'Dimonko', 27, 'Russia', 'Dmitrii', 'Korovushkin', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (85, 'Gimliques', 27, 'Russia', 'Roman', 'Generalov', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (86, 'Balkane', null, 'Ukraine', 'Cristian', 'Lengyel', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (87, 'Maxim', null, 'Russia', 'Maxim', 'Tarasov', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (88, 'Mytant', null, 'Ukraine', 'Evgeny', 'Zavalny', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (89, 'Miracle', null, 'Russia', 'Ruslan', 'Zainulin', 'Support');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (90, 'Sericus', 22, 'China', 'Yuxuan', 'Xia', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (91, 'Rein', null, 'Russia', 'Artem', 'Zenyan', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (92, 'PekiDo', null, 'Ukraine', 'Zhenya', 'Moskalenko', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (93, 'cyraXx', 19, 'Latvia', 'Vadim', 'Averin', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (94, 'Mercenary', 20, 'Russia', 'Ali', 'Musaev', 'Support');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (95, 'Charger1', null, 'Russia', 'Оleg', 'Zhuravlyov', 'Top');
+
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (96, 'Romuka', null, 'Ukraine', 'Roman', 'Vlasov', 'Top');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (97, 'BullyMaguire', null, 'Russia', 'Stepan', 'Leontyev', 'Jungle');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (98, 'Stepan', 19, 'Ukraine', 'Stepan', 'Hrabik', 'Mid');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (99, 'Valhalla', 23, 'Russia', 'Ilya', 'Atnazhev', 'Adc');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (100, 'SimSin', null, 'Russia', 'Vladislav', 'Samokha', 'Support');
+insert into player (id_player, nickname, age, country_of_birth, name, surname, role) values (101, 'FERRARI810', null, 'Russia', 'Damir', 'Garifullin', 'Mid');
+
+-- adding team membership
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (1, 'Main Roster', 1, 1);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (2, 'Main Roster', 2, 1);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (3, 'Main Roster', 3, 1);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (4, 'Main Roster', 4, 1);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (5, 'Main Roster', 5, 1);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (6, 'Substitute', 6, 1);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (7, 'Main Roster', 7, 2);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (8, 'Main Roster', 8, 2);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (9, 'Main Roster', 9, 2);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (10, 'Main Roster', 10, 2);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (11, 'Main Roster', 11, 2);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (12, 'Substitute', 12, 2);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (13, 'Main Roster', 13, 3);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (14, 'Main Roster', 14, 3);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (15, 'Main Roster', 15, 3);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (16, 'Main Roster', 16, 3);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (17, 'Main Roster', 17, 3);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (18, 'Main Roster', 18, 4);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (19, 'Main Roster', 19, 4);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (20, 'Main Roster', 20, 4);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (21, 'Main Roster', 21, 4);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (22, 'Main Roster', 22, 4);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (23, 'Main Roster', 23, 5);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (24, 'Main Roster', 24, 5);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (25, 'Main Roster', 25, 5);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (26, 'Main Roster', 26, 5);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (27, 'Main Roster', 27, 5);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (28, 'Main Roster', 28, 6);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (29, 'Main Roster', 29, 6);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (30, 'Main Roster', 30, 6);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (31, 'Main Roster', 31, 6);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (32, 'Main Roster', 32, 6);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (33, 'Substitute', 33, 6);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (34, 'Substitute', 34, 6);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (35, 'Main Roster', 35, 7);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (36, 'Main Roster', 36, 7);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (37, 'Main Roster', 37, 7);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (38, 'Main Roster', 38, 7);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (39, 'Main Roster', 39, 7);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (40, 'Substitute', 40, 7);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (41, 'Substitute', 41, 7);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (42, 'Main Roster', 42, 8);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (43, 'Main Roster', 43, 8);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (44, 'Main Roster', 44, 8);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (45, 'Main Roster', 45, 8);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (46, 'Main Roster', 46, 8);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (47, 'Main Roster', 47, 9);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (48, 'Main Roster', 48, 9);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (49, 'Main Roster', 49, 9);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (50, 'Main Roster', 50, 9);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (51, 'Main Roster', 51, 9);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (52, 'Main Roster', 52, 10);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (53, 'Main Roster', 53, 10);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (54, 'Main Roster', 54, 10);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (55, 'Main Roster', 55, 10);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (56, 'Main Roster', 56, 10);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (57, 'Substitute', 57, 10);
+
+
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (58, 'Main Roster', 58, 11);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (59, 'Main Roster', 59, 11);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (60, 'Main Roster', 60, 11);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (61, 'Main Roster', 61, 11);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (62, 'Main Roster', 62, 11);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (63, 'Main Roster', 63, 12);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (64, 'Main Roster', 64, 12);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (65, 'Main Roster', 65, 12);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (66, 'Main Roster', 66, 12);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (67, 'Main Roster', 67, 12);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (68, 'Substitute', 68, 12);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (69, 'Main Roster', 69, 13);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (70, 'Main Roster', 70, 13);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (71, 'Main Roster', 71, 13);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (72, 'Main Roster', 72, 13);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (73, 'Main Roster', 73, 13);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (74, 'Main Roster', 74, 14);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (75, 'Main Roster', 75, 14);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (76, 'Main Roster', 76, 14);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (77, 'Main Roster', 77, 14);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (78, 'Main Roster', 78, 14);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (79, 'Substitute', 79, 14);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (80, 'Main Roster', 80, 15);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (81, 'Main Roster', 81, 15);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (82, 'Main Roster', 82, 15);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (83, 'Main Roster', 83, 15);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (84, 'Main Roster', 84, 15);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (85, 'Main Roster', 85, 16);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (86, 'Main Roster', 86, 16);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (87, 'Main Roster', 87, 16);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (88, 'Main Roster', 88, 16);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (89, 'Main Roster', 89, 16);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (90, 'Main Roster', 90, 17);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (91, 'Main Roster', 91, 17);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (92, 'Main Roster', 92, 17);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (93, 'Main Roster', 93, 17);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (94, 'Main Roster', 94, 17);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (95, 'Substitute', 95, 17);
+
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (96, 'Main Roster', 96, 18);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (97, 'Main Roster', 97, 18);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (98, 'Main Roster', 98, 18);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (99, 'Main Roster', 99, 18);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (100, 'Main Roster', 100, 18);
+insert into team_membership (id_team_membership, current_position, id_player, id_team) values (101, 'Substitute', 101, 18);
+
+-- adding coaches
+
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (1, 'Fabian', 'Lohmann', 'Germany', 26, 1);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (2, 'Simon', 'Payne', 'United Kingdom', null, 2);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (3, 'Marcus', 'Blom', 'Sweden', 28, 2);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (4, 'James', 'MacCormack', 'United Kingdom', 27, 3);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (5, 'Christophe', 'Oudheusden', 'Belgium', null, 3);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (6, 'Patrick', 'Suckow-Breum', 'Denmark', 28, 3);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (7, 'Dylan', 'Falco', 'Canada', null, 4);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (8, 'Jakob', 'Mebdi', 'Sweden', 25, 5);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (9, 'Gary', 'Mialaret', 'France', 31, 5);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (10, 'Kevin', 'Tolman', 'United Kingdom', null, 5);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (11, 'Jesse', 'Le', 'Denmark', 24, 6);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (12, 'Thomas', 'Diakun', 'United Kingdom', null, 6);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (13, 'Adrian', 'Widera', 'Poland', 27, 7);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (14, 'Ilias', 'Theodorou', 'Greece', 27, 7);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (15, 'Alexander', 'Cartwright', 'United Kingdom', null, 7);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (16, 'Joey', 'Steltenpool', 'Netherlands', 29, 8);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (17, 'Petar', 'Georgiev', 'Bulgaria', 30, 8);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (18, 'Baltat', 'Alin-Ciprian', 'Romania', null, 9);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (19, 'Bjørn-Vegar', 'Hansen', 'Norway', 25, 9);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (20, 'Hadrien', 'Forestier', 'France', 29, 10);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (21, 'Louis-Victor', 'Legendre', 'France', 29, 10);
+
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (22, 'Igors', 'Radkevič', 'Latvia', 30, 11);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (23, 'Yevgeny', 'Starosvetskiy', 'Russia', 29, 12);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (24, 'Denis', 'Merkulov', 'Russia', 26, 13);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (25, 'Nickita', 'Davlitsarov', 'Russia', 24, 13);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (26, 'Fabian', 'Mallant', 'Germany', 27, 14);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (27, 'Dmitrii', 'Protasov', 'Russia', null, 14);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (28, 'Nikita', 'Lavrinov', 'Russia', 25, 15);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (29, 'Ilya', 'Mikhaylenko', 'Russia', 23, 16);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (30, 'Kirill', 'Katashov', 'Russia', 26, 17);
+insert into coach (id_coach, name, surname, country_of_birth, age, id_team) values (31, 'Dmitry', 'Sukhanov', 'Russia', 34, 18);
+
+insert into coach (id_coach, name, surname, country_of_birth, age) values (32, 'Chester', 'Bennington', 'USA', 41);
+
+-- adding sponsors
+
+insert into sponsor (id_sponsor, name, id_team) values (1, 'Logitech', 1);
+insert into sponsor (id_sponsor, name, id_team) values (2, 'Secretlab', 1);
+insert into sponsor (id_sponsor, name, id_team) values (3, 'ReKTGlobal', 2);
+insert into sponsor (id_sponsor, name, id_team) values (4, 'Find Your Grind', 2);
+insert into sponsor (id_sponsor, name, id_team) values (5, 'OverActive Media', 3);
+insert into sponsor (id_sponsor, name, id_team) values (6, 'Konami', 4);
+insert into sponsor (id_sponsor, name, id_team) values (7, 'Deutsche Glasfaser', 4);
+insert into sponsor (id_sponsor, name, id_team) values (8, 'OnePlus', 5);
+insert into sponsor (id_sponsor, name, id_team) values (9, 'Monster Energy', 5);
+insert into sponsor (id_sponsor, name, id_team) values (10, 'AMD', 5);
+insert into sponsor (id_sponsor, name, id_team) values (11, 'BMW', 5);
+insert into sponsor (id_sponsor, name, id_team) values (12, 'Deutsche Telekom', 6);
+insert into sponsor (id_sponsor, name, id_team) values (13, 'Mercedes-Benz', 6);
+insert into sponsor (id_sponsor, name, id_team) values (14, 'Sennheiser', 6);
+insert into sponsor (id_sponsor, name, id_team) values (15, 'Misfits Gaming Group', 7);
+insert into sponsor (id_sponsor, name, id_team) values (16, 'OMEN by HP', 8);
+insert into sponsor (id_sponsor, name, id_team) values (17, 'Cooler Master', 8);
+insert into sponsor (id_sponsor, name, id_team) values (18, 'Audi', 9);
+insert into sponsor (id_sponsor, name, id_team) values (19, 'Astralis Group', 9);
+insert into sponsor (id_sponsor, name, id_team) values (20, 'Razer', 10);
+insert into sponsor (id_sponsor, name, id_team) values (21, 'Renault Sport', 10);
+insert into sponsor (id_sponsor, name, id_team) values (22, 'Adidas', 10);
+insert into sponsor (id_sponsor, name, id_team) values (23, 'One Breath Gaming funds', 11);
+insert into sponsor (id_sponsor, name, id_team) values (24, 'MTS', 12);
+insert into sponsor (id_sponsor, name, id_team) values (25, 'Opera GX', 13);
+insert into sponsor (id_sponsor, name, id_team) values (26, 'Trust Gaming', 14);
+insert into sponsor (id_sponsor, name, id_team) values (27, 'eNgage', 14);
+insert into sponsor (id_sponsor, name, id_team) values (28, 'Chairman', 15);
+insert into sponsor (id_sponsor, name, id_team) values (29, 'More Legends', 15);
+insert into sponsor (id_sponsor, name, id_team) values (30, 'Lenovo', 16);
+insert into sponsor (id_sponsor, name, id_team) values (31, 'FC Dynamo Moscow', 16);
+insert into sponsor (id_sponsor, name, id_team) values (32, 'Kaspersky', 16);
+insert into sponsor (id_sponsor, name, id_team) values (33, 'Esportclothing', 17);
+insert into sponsor (id_sponsor, name, id_team) values (34, 'Nitrogen Sports', 17);
+
+
+insert into sponsor (id_sponsor, name, id_league) values (36, 'Warner music', 1);
+insert into sponsor (id_sponsor, name, id_league) values (37, 'Beko', 1);
+insert into sponsor (id_sponsor, name, id_league) values (38, 'JBL', 2);
+insert into sponsor (id_sponsor, name, id_league) values (39, 'KitKat', 2);
+
+-- adding employees
+
+insert into employee (id_employee, name, surname, age) values (1, 'Eefje', 'Depoortere', 33);
+insert into employee (id_employee, name, surname, age) values (2, 'Laure', 'Valée', 28);
+insert into employee (id_employee, name, surname, age) values (3, 'Aaron', 'Chamberlain', 29);
+insert into employee (id_employee, name, surname, age) values (4, 'Trevor', 'Henry', 33);
+insert into employee (id_employee, name, surname, age) values (5, 'Daniel', 'Drakos', null);
+insert into employee (id_employee, name, surname, age) values (6, 'Andrew', 'Day', 28);
+insert into employee (id_employee, name, surname, age) values (7, 'Christy', 'Frierson', 23);
+insert into employee (id_employee, name, surname, age) values (8, 'Marc', 'Lamont', 25);
+insert into employee (id_employee, name, surname, age) values (9, 'Dan', 'Wyatt', 33);
+insert into employee (id_employee, name, surname, age) values (10, 'Yury', 'Shilenkov', 27);
+insert into employee (id_employee, name, surname, age) values (11, 'Pavel', 'Shabalin', null);
+insert into employee (id_employee, name, surname, age) values (12, 'Faik', 'Aliev', 31);
+insert into employee (id_employee, name, surname, age) values (13, 'Dmitri', 'Kulkin', 29);
+insert into employee (id_employee, name, surname, age) values (14, 'Vadim', 'Shabinevich', 22);
+insert into employee (id_employee, name, surname, age) values (15, 'Arman', 'Avagyan', null);
+insert into employee (id_employee, name, surname, age) values (16, 'Mikhail', 'Zverev', 27);
+
+-- adding casters
+
+insert into caster (id_employee, language) values (3, 'English');
+insert into caster (id_employee, language) values (4, 'English');
+insert into caster (id_employee, language) values (5, 'English');
+insert into caster (id_employee, language) values (6, 'English');
+insert into caster (id_employee, language) values (7, 'English');
+insert into caster (id_employee, language) values (9, 'English');
+insert into caster (id_employee, language) values (10, 'Russian');
+insert into caster (id_employee, language) values (13, 'Russian');
+insert into caster (id_employee, language) values (14, 'Russian');
+
+-- adding production
+
+insert into production (id_employee, position) values (1, 'Host');
+insert into production (id_employee, position) values (11, 'Host');
+insert into production (id_employee, position) values (2, 'Interviewer');
+insert into production (id_employee, position) values (8, 'Analyst');
+insert into production (id_employee, position) values (12, 'Analyst');
+insert into production (id_employee, position) values (15, 'Analyst');
+
+insert into league_employee (id_employee, id_league) values (1,1);
+insert into league_employee (id_employee, id_league) values (2,1);
+insert into league_employee (id_employee, id_league) values (3,1);
+insert into league_employee (id_employee, id_league) values (4,1);
+insert into league_employee (id_employee, id_league) values (5,1);
+insert into league_employee (id_employee, id_league) values (6,1);
+insert into league_employee (id_employee, id_league) values (7,1);
+insert into league_employee (id_employee, id_league) values (8,1);
+insert into league_employee (id_employee, id_league) values (9,1);
+insert into league_employee (id_employee, id_league) values (10,2);
+insert into league_employee (id_employee, id_league) values (11,2);
+insert into league_employee (id_employee, id_league) values (12,2);
+insert into league_employee (id_employee, id_league) values (13,2);
+insert into league_employee (id_employee, id_league) values (14,2);
+insert into league_employee (id_employee, id_league) values (15,2);
+insert into league_employee (id_employee, id_league) values (16,1);
+insert into league_employee (id_employee, id_league) values (16,2);

@@ -1,0 +1,160 @@
+1. In which teams are the players who was born in Czech Republic?
+
+RA: 
+{player(country_of_birth='Czech Republic')*>team_membership*>team}[name]
+
+SQL: 
+select distinct team.name from team join team_membership on team.id_team = team_membership.id_team join player using(id_player) where player.country_of_birth='Czech Republic'
+
+
+
+2. What role does a player with nickname "Rekkles" play? 
+
+RA:
+player(nickname='Rekkles')[role]
+
+SQL:
+select role from player where nickname='Rekkles'
+
+
+
+3. In which city does "LEC" league take place?
+
+SQL:
+select city.name as city from city join studio using(id_city) join league using(id_studio) where league.name='LEC'
+
+
+
+4. Select names of the teams that only have coaches from Germany (and none from elsewhere).
+
+RA:
+{{coach(country_of_birth='Germany')[id_coach, id_team]*>team}
+\
+{coach(country_of_birth!='Germany')[id_coach, id_team]*>team}}[name]
+
+SQL:
+select team.name from team join coach using(id_team) where coach.country_of_birth='Germany'
+except
+select team.name from team join coach using(id_team) where coach.country_of_birth!='Germany'
+
+
+
+5. Select all employees who work for all leagues.
+
+RA:
+{{league_employee[id_employee, id_league] ÷ league[id_league]}[id_employee] *> employee}[name, surname]
+
+SQL:
+select e.name, e.surname from employee e where not exists(
+select * from league l where not exists(
+select * from league_employee le where l.id_league = le.id_league and e.id_employee = le.id_employee))
+
+
+
+6. How many teams have a coach from the UK?
+
+SQL:
+select count(*) from team join coach using(id_team) where coach.country_of_birth='United Kingdom'
+
+
+
+7. Select all substitute players.
+
+SQL:
+select * from player where exists(
+select * from team_membership where player.id_player = team_membership.id_player and team_membership.current_position='Substitute')
+
+
+
+8. Select teams that have more than one 1 sponsor.
+
+SQL:
+select * from (select team.name, (select count(*) from sponsor where team.id_team = sponsor.id_team) as sponsor_count from team) team where sponsor_count > 1
+
+
+
+9. Select all sponsors and teams that are sponsored by them.
+
+SQL:
+select s.name as sponsor, t.name as team
+from sponsor s left join team t on t.id_team=s.id_team
+
+
+
+10. Select all sponsorship records and sponsored teams (if any).
+
+SQL:
+select s.name as sponsor, t.name as team
+from sponsor s full join team t on t.id_team=s.id_team
+
+
+
+11. Select all sponsors of teams "Unicorns of Love" and "G2 Esports".
+
+RA:
+{{team(name='Unicorns Of Love')[id_team]*>sponsor} ∪ {team(name='G2 Esports')[id_team]*>sponsor}}[name]
+
+SQL:
+select sponsor.name from sponsor join team on team.id_team = sponsor.id_team where team.name='Unicorns Of Love'
+union
+select sponsor.name from sponsor join team on team.id_team = sponsor.id_team where team.name='G2 Esports'
+
+
+
+12. Select the first and last names of the coaches (if there are more than 2 in one team) from teams Unicorns Of Love,  MAD Lions and Astralis, and sort them by last name, then by first name.
+
+SQL:
+select c.name, c.surname from coach c join team t on t.id_team = c.id_team where t.name='Unicorns Of Love' or t.name='MAD Lions' or t.name='Astralis'
+group by c.id_team, c.name, c.surname
+having (select count(*) from coach join team using(id_team) where coach.id_team = c.id_team ) > 2
+order by c.surname asc
+
+
+
+13. Add all employees to the casters list and add Klingon as their language.
+
+SQL:
+begin;
+insert into caster (id_employee, language)
+select e.id_employee, 'Klingon' from employee e 
+where e.id_employee not in (select c.id_employee from caster c);
+commit;
+
+
+
+14. Double LCL studio's capacity.
+
+SQL:
+begin;
+update studio set capacity = capacity * 2
+where id_studio in(
+select id_studio from league where league.name='LCL');
+commit;
+
+
+
+15. Delete all interviewers from production table.
+
+SQL:
+begin;
+delete from production where position in(select position from production where position='Interviewer');
+commit;
+
+
+
+16. Select coaches that don't have any team.
+
+RA:
+{team[id_team]!*>coach}[name, surname]
+
+SQL:
+select name,surname from coach c where not exists (select * from team where id_team=c.id_team)
+
+
+
+17. Select all leagues where the commentator can work if he would like to change his job.
+
+SQL:
+(select employee.name, employee.surname, league.name from caster join employee using(id_employee) join league_employee using(id_employee) cross join league)
+except
+(select employee.name, employee.surname, league.name from caster join employee using(id_employee) join league_employee using(id_employee) join league using(id_league))

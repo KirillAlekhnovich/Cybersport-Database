@@ -1,0 +1,943 @@
+{
+  "entities": [
+    {
+      "name": "Caster",
+      "parent": null,
+      "attr": [
+        {
+          "name": "language",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 12,
+        "y": 476.609375,
+        "width": 159,
+        "height": 90
+      }
+    },
+    {
+      "name": "City",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_city",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 721,
+        "y": 24.609375,
+        "width": 170,
+        "height": 97
+      }
+    },
+    {
+      "name": "Coach",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_coach",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "age",
+          "primary": false,
+          "unique": false,
+          "nullable": true
+        },
+        {
+          "name": "country_of_birth",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "surname",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 434,
+        "y": 549.609375,
+        "width": 215,
+        "height": 132
+      }
+    },
+    {
+      "name": "Country",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_country",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 1011,
+        "y": 26.609375,
+        "width": 175,
+        "height": 99
+      }
+    },
+    {
+      "name": "Employee",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_employee",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "age",
+          "primary": false,
+          "unique": false,
+          "nullable": true
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "surname",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 115,
+        "y": 275.609375,
+        "width": 178,
+        "height": 110
+      }
+    },
+    {
+      "name": "League",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_league",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": true,
+          "nullable": false
+        },
+        {
+          "name": "prize_pool",
+          "primary": false,
+          "unique": false,
+          "nullable": true
+        }
+      ],
+      "transform": {
+        "x": 115,
+        "y": 61.609375,
+        "width": 185,
+        "height": 126
+      }
+    },
+    {
+      "name": "Player",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_player",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "nickname",
+          "primary": false,
+          "unique": true,
+          "nullable": false
+        },
+        {
+          "name": "age",
+          "primary": false,
+          "unique": false,
+          "nullable": true
+        },
+        {
+          "name": "country_of_birth",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "role",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "surname",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 795,
+        "y": 540.609375,
+        "width": 240,
+        "height": 136
+      }
+    },
+    {
+      "name": "Production",
+      "parent": null,
+      "attr": [
+        {
+          "name": "position",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 242,
+        "y": 477.609375,
+        "width": 164,
+        "height": 94
+      }
+    },
+    {
+      "name": "Sponsor",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_sponsor",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 915,
+        "y": 161.609375,
+        "width": 183,
+        "height": 110
+      }
+    },
+    {
+      "name": "Studio",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_studio",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "capacity",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 450,
+        "y": 25.609375,
+        "width": 161,
+        "height": 98
+      }
+    },
+    {
+      "name": "Team",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_team",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "name",
+          "primary": false,
+          "unique": true,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 450,
+        "y": 247.609375,
+        "width": 183,
+        "height": 126
+      }
+    },
+    {
+      "name": "Team_membership",
+      "parent": null,
+      "attr": [
+        {
+          "name": "id_team_membership",
+          "primary": true,
+          "unique": false,
+          "nullable": false
+        },
+        {
+          "name": "current_position",
+          "primary": false,
+          "unique": false,
+          "nullable": false
+        }
+      ],
+      "transform": {
+        "x": 811,
+        "y": 304.609375,
+        "width": 204,
+        "height": 98
+      }
+    }
+  ],
+  "relations": [
+    [
+      {
+        "entity": "Country",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 1011,
+            "y": 74.724365234375,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 951,
+              "y": 74.7293701171875
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "City",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": "is in",
+        "transform": {
+          "anchor": {
+            "x": 891,
+            "y": 74.734375,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 951,
+              "y": 74.7293701171875
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Employee",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": "can be",
+        "transform": {
+          "anchor": {
+            "x": 147,
+            "y": 385.609375,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 147,
+              "y": 465.609375
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Caster",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 91.5,
+            "y": 476.609375,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 147,
+              "y": 465.609375
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "League",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": "hires",
+        "transform": {
+          "anchor": {
+            "x": 203.98046875,
+            "y": 187.609375,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 203.990234375,
+              "y": 231.609375
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Employee",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 204,
+            "y": 275.609375,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 203.990234375,
+              "y": 231.609375
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Production",
+        "identifying": true,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 324,
+            "y": 477.609375,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 260,
+              "y": 466.609375
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Employee",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": "can be",
+        "transform": {
+          "anchor": {
+            "x": 260,
+            "y": 385.609375,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 260,
+              "y": 466.60937452316284
+            },
+            {
+              "x": 260,
+              "y": 466.609375
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Sponsor",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 0,
+        "xor": "3f3b00f3746009257460092576080cde",
+        "name": "can be sponsoring",
+        "transform": {
+          "anchor": {
+            "x": 915,
+            "y": 179.57421875,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 604.5,
+              "y": 179.19482421875
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "League",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 300,
+            "y": 178.8154296875,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 604.5,
+              "y": 179.19482421875
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Studio",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": "is in",
+        "transform": {
+          "anchor": {
+            "x": 611,
+            "y": 73.1112060546875,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 666,
+              "y": 73.11029052734375
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "City",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 721,
+            "y": 73.109375,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 666,
+              "y": 73.11029052734375
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Studio",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 450,
+            "y": 74.609375,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 375,
+              "y": 74.6328125
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "League",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": "takes place",
+        "transform": {
+          "anchor": {
+            "x": 300,
+            "y": 74.65625,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 375,
+              "y": 74.6328125
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Team_membership",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": "in a",
+        "transform": {
+          "anchor": {
+            "x": 811,
+            "y": 353.609375,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 722,
+              "y": 353.626953125
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Team",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 633,
+            "y": 353.64453125,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 722,
+              "y": 353.626953125
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Team_membership",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 913,
+            "y": 402.609375,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 914,
+              "y": 471.609375
+            }
+          ],
+          "manual": true
+        }
+      },
+      {
+        "entity": "Player",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": "is now",
+        "transform": {
+          "anchor": {
+            "x": 915,
+            "y": 540.609375,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 914,
+              "y": 471.609375
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Team",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 0,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 450,
+            "y": 310.609375,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 356,
+              "y": 310.609375
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "League",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": "has",
+        "transform": {
+          "anchor": {
+            "x": 263,
+            "y": 187.609375,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 356,
+              "y": 198.609375
+            },
+            {
+              "x": 356,
+              "y": 310.609375
+            }
+          ],
+          "manual": true
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Team",
+        "identifying": false,
+        "optional": false,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 541.5,
+            "y": 373.609375,
+            "edge": 2
+          },
+          "points": [
+            {
+              "x": 541.5,
+              "y": 461.609375
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Coach",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 0,
+        "xor": null,
+        "name": "trains",
+        "transform": {
+          "anchor": {
+            "x": 541.5,
+            "y": 549.609375,
+            "edge": 0
+          },
+          "points": [
+            {
+              "x": 541.5,
+              "y": 461.609375
+            }
+          ],
+          "manual": false
+        }
+      }
+    ],
+    [
+      {
+        "entity": "Team",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 1,
+        "xor": null,
+        "name": null,
+        "transform": {
+          "anchor": {
+            "x": 633,
+            "y": 278.609375,
+            "edge": 1
+          },
+          "points": [
+            {
+              "x": 771,
+              "y": 260.109375
+            }
+          ],
+          "manual": false
+        }
+      },
+      {
+        "entity": "Sponsor",
+        "identifying": false,
+        "optional": true,
+        "cardinality": 0,
+        "xor": "3f3b00f3746009257460092576080cde",
+        "name": "can be sponsoring",
+        "transform": {
+          "anchor": {
+            "x": 915,
+            "y": 241.609375,
+            "edge": 3
+          },
+          "points": [
+            {
+              "x": 771,
+              "y": 260.109375
+            }
+          ],
+          "manual": false
+        }
+      }
+    ]
+  ],
+  "notes": [
+    {
+      "text": "IO1: Players roles can only be &quot;Top&quot;, &quot;Jungle&quot;, &quot;Mid&quot;,\n&quot;Adc&quot; and &quot;Support&quot;",
+      "transform": {
+        "x": 1250,
+        "y": 55.609375,
+        "width": 511.984375,
+        "height": 60
+      }
+    },
+    {
+      "text": "IO2: Current position in entity &quot;Team_membership&quot; must\nbe only &quot;Main Roster&quot; or &quot;Substitute&quot;",
+      "transform": {
+        "x": 1251,
+        "y": 124.609375,
+        "width": 402.40625,
+        "height": 59.609375
+      }
+    },
+    {
+      "text": "IO3: Each league have its' own location, so one studio can\nonly be used for one league",
+      "transform": {
+        "x": 1251,
+        "y": 196.609375,
+        "width": 381,
+        "height": 57
+      }
+    }
+  ]
+}

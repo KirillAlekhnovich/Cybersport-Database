@@ -1,0 +1,192 @@
+-- if function to delete tables and sequence exists
+DROP FUNCTION IF EXISTS remove_all();
+
+-- creating function to remove 
+CREATE or replace FUNCTION remove_all() RETURNS void AS $$
+DECLARE
+    rec RECORD;
+    cmd text;
+BEGIN
+    cmd := '';
+
+    FOR rec IN SELECT
+            'DROP SEQUENCE ' || quote_ident(n.nspname) || '.'
+                || quote_ident(c.relname) || ' CASCADE;' AS name
+        FROM
+            pg_catalog.pg_class AS c
+        LEFT JOIN
+            pg_catalog.pg_namespace AS n
+        ON
+            n.oid = c.relnamespace
+        WHERE
+            relkind = 'S' AND
+            n.nspname NOT IN ('pg_catalog', 'pg_toast') AND
+            pg_catalog.pg_table_is_visible(c.oid)
+    LOOP
+        cmd := cmd || rec.name;
+    END LOOP;
+
+    FOR rec IN SELECT
+            'DROP TABLE ' || quote_ident(n.nspname) || '.'
+                || quote_ident(c.relname) || ' CASCADE;' AS name
+        FROM
+            pg_catalog.pg_class AS c
+        LEFT JOIN
+            pg_catalog.pg_namespace AS n
+        ON
+            n.oid = c.relnamespace WHERE relkind = 'r' AND
+            n.nspname NOT IN ('pg_catalog', 'pg_toast') AND
+            pg_catalog.pg_table_is_visible(c.oid)
+    LOOP
+        cmd := cmd || rec.name;
+    END LOOP;
+
+    EXECUTE cmd;
+    RETURN;
+END;
+$$ LANGUAGE plpgsql;
+-- calling function to remove tables and sequence
+select remove_all();
+-- End of removing
+
+CREATE TABLE caster (
+    id_employee INTEGER NOT NULL,
+    language VARCHAR(30) NOT NULL
+);
+ALTER TABLE caster ADD CONSTRAINT pk_caster PRIMARY KEY (id_employee);
+
+CREATE TABLE city (
+    id_city SERIAL NOT NULL,
+    id_country INTEGER NOT NULL,
+    name VARCHAR(30) NOT NULL
+);
+ALTER TABLE city ADD CONSTRAINT pk_city PRIMARY KEY (id_city);
+
+CREATE TABLE coach (
+    id_coach SERIAL NOT NULL,
+    id_team INTEGER,
+    age INTEGER,
+    country_of_birth VARCHAR(30) NOT NULL,
+    name VARCHAR(30) NOT NULL,
+    surname VARCHAR(30) NOT NULL
+);
+ALTER TABLE coach ADD CONSTRAINT pk_coach PRIMARY KEY (id_coach);
+
+CREATE TABLE country (
+    id_country SERIAL NOT NULL,
+    name VARCHAR(30) NOT NULL
+);
+ALTER TABLE country ADD CONSTRAINT pk_country PRIMARY KEY (id_country);
+
+CREATE TABLE employee (
+    id_employee SERIAL NOT NULL,
+    age INTEGER,
+    name VARCHAR(30) NOT NULL,
+    surname VARCHAR(30) NOT NULL
+);
+ALTER TABLE employee ADD CONSTRAINT pk_employee PRIMARY KEY (id_employee);
+
+CREATE TABLE league (
+    id_league SERIAL NOT NULL,
+    id_studio INTEGER NOT NULL,
+    name VARCHAR(20) NOT NULL,
+    prize_pool INTEGER
+);
+ALTER TABLE league ADD CONSTRAINT pk_league PRIMARY KEY (id_league);
+ALTER TABLE league ADD CONSTRAINT uc_league_name UNIQUE (name);
+ALTER TABLE league ADD CONSTRAINT u_fk_league_studio UNIQUE (id_studio);
+
+CREATE TABLE player (
+    id_player SERIAL NOT NULL,
+    nickname VARCHAR(30) NOT NULL,
+    age INTEGER,
+    country_of_birth VARCHAR(30) NOT NULL,
+    name VARCHAR(30) NOT NULL,
+    role VARCHAR(8) NOT NULL,
+    surname VARCHAR(30) NOT NULL
+);
+ALTER TABLE player
+    ADD CONSTRAINT ch_inh_player CHECK ( role IN (
+        'Top',
+        'Jungle',
+        'Mid',
+        'Adc',
+        'Support'
+    ) );
+ALTER TABLE player ADD CONSTRAINT pk_player PRIMARY KEY (id_player);
+ALTER TABLE player ADD CONSTRAINT uc_player_nickname UNIQUE (nickname);
+
+CREATE TABLE production (
+    id_employee INTEGER NOT NULL,
+    position VARCHAR(30) NOT NULL
+);
+ALTER TABLE production ADD CONSTRAINT pk_production PRIMARY KEY (id_employee);
+
+CREATE TABLE sponsor (
+    id_sponsor SERIAL NOT NULL,
+    id_league INTEGER,
+    id_team INTEGER,
+    name VARCHAR(30) NOT NULL
+);
+ALTER TABLE sponsor ADD CONSTRAINT pk_sponsor PRIMARY KEY (id_sponsor);
+
+CREATE TABLE studio (
+    id_studio SERIAL NOT NULL,
+    id_city INTEGER NOT NULL,
+    capacity INTEGER NOT NULL,
+    name VARCHAR(30) NOT NULL
+);
+ALTER TABLE studio ADD CONSTRAINT pk_studio PRIMARY KEY (id_studio);
+
+CREATE TABLE team (
+    id_team SERIAL NOT NULL,
+    id_league INTEGER NOT NULL,
+    name VARCHAR(30) NOT NULL
+);
+ALTER TABLE team ADD CONSTRAINT pk_team PRIMARY KEY (id_team);
+ALTER TABLE team ADD CONSTRAINT uc_team_name UNIQUE (name);
+
+CREATE TABLE team_membership (
+    id_team_membership SERIAL NOT NULL,
+    id_team INTEGER NOT NULL,
+    id_player INTEGER NOT NULL,
+    current_position VARCHAR(12) NOT NULL
+);
+ALTER TABLE team_membership
+    ADD CONSTRAINT ch_inh_team_membership CHECK ( current_position IN (
+        'Main Roster',
+        'Substitute'
+    ) );
+ALTER TABLE team_membership ADD CONSTRAINT pk_team_membership PRIMARY KEY (id_team_membership);
+ALTER TABLE team_membership ADD CONSTRAINT u_fk_team_membership_player UNIQUE (id_player);
+
+CREATE TABLE league_employee (
+    id_employee INTEGER NOT NULL,
+    id_league INTEGER NOT NULL
+);
+ALTER TABLE league_employee ADD CONSTRAINT pk_league_employee PRIMARY KEY (id_employee, id_league);
+
+ALTER TABLE caster ADD CONSTRAINT fk_caster_employee FOREIGN KEY (id_employee) REFERENCES employee (id_employee) ON DELETE CASCADE;
+
+ALTER TABLE city ADD CONSTRAINT fk_city_country FOREIGN KEY (id_country) REFERENCES country (id_country) ON DELETE CASCADE;
+
+ALTER TABLE coach ADD CONSTRAINT fk_coach_team FOREIGN KEY (id_team) REFERENCES team (id_team) ON DELETE CASCADE;
+
+ALTER TABLE league ADD CONSTRAINT fk_league_studio FOREIGN KEY (id_studio) REFERENCES studio (id_studio) ON DELETE CASCADE;
+
+ALTER TABLE production ADD CONSTRAINT fk_production_employee FOREIGN KEY (id_employee) REFERENCES employee (id_employee) ON DELETE CASCADE;
+
+ALTER TABLE sponsor ADD CONSTRAINT fk_sponsor_league FOREIGN KEY (id_league) REFERENCES league (id_league) ON DELETE CASCADE;
+ALTER TABLE sponsor ADD CONSTRAINT fk_sponsor_team FOREIGN KEY (id_team) REFERENCES team (id_team) ON DELETE CASCADE;
+
+ALTER TABLE studio ADD CONSTRAINT fk_studio_city FOREIGN KEY (id_city) REFERENCES city (id_city) ON DELETE CASCADE;
+
+ALTER TABLE team ADD CONSTRAINT fk_team_league FOREIGN KEY (id_league) REFERENCES league (id_league) ON DELETE CASCADE;
+
+ALTER TABLE team_membership ADD CONSTRAINT fk_team_membership_team FOREIGN KEY (id_team) REFERENCES team (id_team) ON DELETE CASCADE;
+ALTER TABLE team_membership ADD CONSTRAINT fk_team_membership_player FOREIGN KEY (id_player) REFERENCES player (id_player) ON DELETE CASCADE;
+
+ALTER TABLE league_employee ADD CONSTRAINT fk_league_employee_employee FOREIGN KEY (id_employee) REFERENCES employee (id_employee) ON DELETE CASCADE;
+ALTER TABLE league_employee ADD CONSTRAINT fk_league_employee_league FOREIGN KEY (id_league) REFERENCES league (id_league) ON DELETE CASCADE;
+
+ALTER TABLE sponsor ADD CONSTRAINT xc_sponsor_id_league_id_team CHECK ((id_league IS NOT NULL AND id_team IS NULL) OR (id_league IS NULL AND id_team IS NOT NULL));
